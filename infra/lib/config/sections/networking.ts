@@ -1,17 +1,17 @@
-import { getBoolean, getNumber, getString } from '../../config/config'
+import { getBoolean, getNumber, getString } from '../utils'
 
-export interface K8sClusterConfig
+export interface VpcConfig
 {
-    readonly VpcCidrRange: string;
+    readonly CidrRange: string;
     readonly MaxAZs: number;
     readonly NatGateways: number;
     readonly UseNatInstances: boolean;
 }
 
-export function getConfig(object: { [name: string]: any }): K8sClusterConfig
+export function getConfig(object: { [name: string]: any }): VpcConfig
 {
     return {
-        VpcCidrRange: getString(object, 'VpcCidrRange'),
+        CidrRange: getString(object, 'CidrRange'),
         MaxAZs: getNumber(object, 'MaxAZs'),
         NatGateways: getNumber(object, 'NatGateways'),
         UseNatInstances: getBoolean(object, 'UseNatInstances')

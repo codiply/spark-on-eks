@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from '@aws-cdk/core';
 import { Config, getConfig } from '../lib/config/config'
-import { K8sClusterStack } from '../lib/stacks/k8s-cluster/k8s-cluster-stack';
+import { MainStack } from '../lib/stacks/main-stack';
 
 const app = new cdk.App();
 let environmentName = app.node.tryGetContext('config');
@@ -11,4 +11,7 @@ const env  = { account: config.Deployment.AWSAccountID, region: config.Deploymen
 
 const prefix = config.Deployment.Prefix
 
-new K8sClusterStack(app, `${prefix}-k8s-cluster`, config.Deployment, config.EksCluster, { env: env });
+new MainStack(app, `${prefix}-k8s-cluster`, { 
+  env: env,
+  config: config
+});

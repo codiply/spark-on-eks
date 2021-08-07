@@ -4,6 +4,7 @@ import * as eks from '@aws-cdk/aws-eks';
 import * as iam from '@aws-cdk/aws-iam';
 import { DeploymentConfig } from '../config/deployment-config';
 import { EksConfig } from '../config/sections/eks';
+import { SparkOperator } from './spark-operator';
 
 export interface EksClusterProps {
   readonly deployment: DeploymentConfig;
@@ -24,17 +25,11 @@ export class EksCluster extends cdk.Construct {
 
     props.deployment.AdminUserArns.forEach(userArn => {
       const user = iam.User.fromUserArn(this, userArn, userArn);
-
       cluster.awsAuth.addUserMapping(user, { groups: [ 'system:masters' ]});
     });
 
-    cluster.addHelmChart('spark-operator', {
-      chart: 'spark-operator',
-      release: 'my-spark-operator-release',
-      repository: 'https://googlecloudplatform.github.io/spark-on-k8s-operator',
-      version: '1.1.6',
-      namespace: 'spark-operator',
-      createNamespace: true
+    new SparkOperator(this, 'spark-operator', {
+      cluster: cluster
     });
   }
 }

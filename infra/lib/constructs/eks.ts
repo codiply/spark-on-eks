@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as eks from '@aws-cdk/aws-eks';
+import * as iam from '@aws-cdk/aws-iam';
 import { DeploymentConfig } from '../config/deployment-config';
 import { EksConfig } from '../config/sections/eks';
 
@@ -18,7 +19,13 @@ export class EksCluster extends cdk.Construct {
       vpc: props.vpc,
       version: eks.KubernetesVersion.V1_21,
       clusterName: `${props.deployment.Prefix}-cluster`,
-      endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE.onlyFrom(props.deployment.AllowedIps)
+      endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE.onlyFrom(...props.deployment.AllowedIpRanges)
+    });
+
+    props.deployment.AdminUserArns.forEach(userArn => {
+      const user = iam.User.fromUserArn(this, userArn, userArn);
+
+      cluster.awsAuth.addUserMapping(user, { groups: [ 'system:masters' ]});
     });
 
     cluster.addHelmChart('spark-operator', {
@@ -29,6 +36,5 @@ export class EksCluster extends cdk.Construct {
       namespace: 'spark-operator',
       createNamespace: true
     });
-
   }
 }

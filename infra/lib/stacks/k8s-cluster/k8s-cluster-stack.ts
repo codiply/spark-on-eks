@@ -38,5 +38,14 @@ export class K8sClusterStack extends cdk.Stack {
       clusterName: `${deployment.Prefix}-cluster`,
       endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE.onlyFrom(deployment.AllowedIps)
     });
+
+    cluster.addHelmChart('spark-operator', {
+      chart: 'spark-operator',
+      release: 'my-spark-operator-release',
+      repository: 'https://googlecloudplatform.github.io/spark-on-k8s-operator',
+      version: '1.1.6',
+      namespace: 'spark-operator',
+      createNamespace: true
+    });
   }
 }

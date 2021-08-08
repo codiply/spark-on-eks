@@ -8,6 +8,7 @@ export interface PySparkJobProps {
   readonly deployment: DeploymentConfig;
   readonly jobName: string;
   readonly cluster: eks.Cluster;
+  readonly sparkVersion: string;
 }
   
 export class PySparkJob extends cdk.Construct {
@@ -17,7 +18,10 @@ export class PySparkJob extends cdk.Construct {
     super(scope, id);
 
     const image = new DockerImageAsset(this, `docker-image-asset-${props.jobName}`, {
-      directory: `./assets/docker-images/${props.jobName}`
+      directory: `./assets/docker-images/${props.jobName}`,
+      buildArgs: {
+        SPARK_VERSION: props.sparkVersion
+      }
     });
 
     props.cluster.addManifest(`spark-job-${props.jobName}`, {
@@ -28,7 +32,7 @@ export class PySparkJob extends cdk.Construct {
         namespace: 'default'
       },
       spec: {
-        sparkVersion: '3.1.1',
+        sparkVersion: props.sparkVersion,
         type: 'Python',
         pythonVersion: "3",
         mode: 'cluster',
@@ -39,7 +43,7 @@ export class PySparkJob extends cdk.Construct {
           coreLimit: "1200m",
           memory: "512m",
           labels: {
-            version: '3.1.1'
+            version: props.sparkVersion
           },
           serviceAccount: 'spark'
         },
@@ -48,7 +52,7 @@ export class PySparkJob extends cdk.Construct {
           instances: 1,
           memory: "512m",
           labels: {
-            version: '3.1.1'
+            version: props.sparkVersion
           }
         }
       }

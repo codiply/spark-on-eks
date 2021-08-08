@@ -3,6 +3,7 @@ import * as eks from '@aws-cdk/aws-eks';
 
 export interface SparkOperatorProps {
   readonly cluster: eks.Cluster;
+  readonly version: string;
 }
   
 export class SparkOperator extends cdk.Construct {
@@ -25,7 +26,7 @@ export class SparkOperator extends cdk.Construct {
       chart: 'spark-operator',
       release: sparkOperatorRelease,
       repository: 'https://googlecloudplatform.github.io/spark-on-k8s-operator',
-      version: '1.1.6',
+      version: props.version,
       namespace: sparkOperatorNamespace,
       createNamespace: true
     });

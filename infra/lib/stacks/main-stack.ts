@@ -25,13 +25,15 @@ export class MainStack extends cdk.Stack {
     });
 
     const sparkOperator = new SparkOperator(this, 'spark-operator', {
-      cluster: eksCluster.cluster
+      cluster: eksCluster.cluster,
+      version: props.config.Eks.SparkOperatorVersion
     });
 
     new PySparkJob(this, 'ecr-image-python-spark-pi', {
       deployment: props.config.Deployment,
       jobName: 'python-spark-pi',
-      cluster: eksCluster.cluster
+      cluster: eksCluster.cluster,
+      sparkVersion: props.config.Spark.Version
     });
   }
 }

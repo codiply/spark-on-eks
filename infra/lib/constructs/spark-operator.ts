@@ -6,6 +6,8 @@ export interface SparkOperatorProps {
 }
   
 export class SparkOperator extends cdk.Construct {
+  public sparkServiceAccount: eks.ServiceAccount;
+
   constructor(scope: cdk.Construct, id: string, props: SparkOperatorProps) {
     super(scope, id);
 
@@ -92,5 +94,7 @@ export class SparkOperator extends cdk.Construct {
       }
     });
     sparkRoleBinding.node.addDependency(sparkRole);
+
+    this.sparkServiceAccount = sparkServiceAccount;
   }
 }

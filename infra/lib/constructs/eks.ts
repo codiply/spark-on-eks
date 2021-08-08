@@ -4,7 +4,6 @@ import * as eks from '@aws-cdk/aws-eks';
 import * as iam from '@aws-cdk/aws-iam';
 import { DeploymentConfig } from '../config/deployment-config';
 import { EksConfig } from '../config/sections/eks';
-import { SparkOperator } from './spark-operator';
 
 export interface EksClusterProps {
   readonly deployment: DeploymentConfig;
@@ -13,6 +12,8 @@ export interface EksClusterProps {
 }
   
 export class EksCluster extends cdk.Construct {
+  public readonly cluster: eks.Cluster;
+
   constructor(scope: cdk.Construct, id: string, props: EksClusterProps) {
     super(scope, id);
 
@@ -28,8 +29,6 @@ export class EksCluster extends cdk.Construct {
       cluster.awsAuth.addUserMapping(user, { groups: [ 'system:masters' ]});
     });
 
-    new SparkOperator(this, 'spark-operator', {
-      cluster: cluster
-    });
+    this.cluster = cluster;
   }
 }

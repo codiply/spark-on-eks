@@ -1,3 +1,5 @@
-FROM alpine
+ARG SPARK_VERSION
 
-COPY application.py /opt/spark/application.py
+FROM gcr.io/spark-operator/spark-py:v${SPARK_VERSION}
+
+COPY application.py /opt/spark-job/application.py

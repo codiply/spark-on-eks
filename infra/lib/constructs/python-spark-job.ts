@@ -35,10 +35,10 @@ export class PySparkJob extends cdk.Construct {
       spec: {
         sparkVersion: props.sparkVersion,
         type: 'Python',
-        pythonVersion: "3",
+        pythonVersion: '3',
         mode: 'cluster',
         image: image.imageUri,
-        mainApplicationFile: 'local:///opt/spark/application.py',
+        mainApplicationFile: 'local:///opt/spark-job/application.py',
         driver: {
           cores: 1,
           coreLimit: "1200m",

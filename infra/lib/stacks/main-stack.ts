@@ -33,7 +33,8 @@ export class MainStack extends cdk.Stack {
       deployment: props.config.Deployment,
       jobName: 'python-spark-pi',
       cluster: eksCluster.cluster,
-      sparkVersion: props.config.Spark.Version
+      sparkVersion: props.config.Spark.Version,
+      serviceAccount: sparkOperator.sparkServiceAccount
     });
   }
 }

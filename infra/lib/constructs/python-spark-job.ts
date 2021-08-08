@@ -9,6 +9,7 @@ export interface PySparkJobProps {
   readonly jobName: string;
   readonly cluster: eks.Cluster;
   readonly sparkVersion: string;
+  readonly serviceAccount: eks.ServiceAccount;
 }
   
 export class PySparkJob extends cdk.Construct {
@@ -45,7 +46,7 @@ export class PySparkJob extends cdk.Construct {
           labels: {
             version: props.sparkVersion
           },
-          serviceAccount: 'spark'
+          serviceAccount: props.serviceAccount.serviceAccountName
         },
         executor: {
           cores: 1,

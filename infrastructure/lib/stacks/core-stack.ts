@@ -51,8 +51,7 @@ export class CoreStack extends cdk.Stack {
       sparkConfig: props.config.Spark,
       jobName: 'python-spark-pi',
       cluster: eksCluster.cluster,
-      serviceAccount: sparkOperator.sparkServiceAccount,
-      bucket: dataLake.bucket
+      serviceAccount: sparkOperator.sparkServiceAccount
     });
     sparkPi.node.addDependency(sparkOperator);
 
@@ -62,7 +61,9 @@ export class CoreStack extends cdk.Stack {
       jobName: 'weather-data',
       cluster: eksCluster.cluster,
       serviceAccount: sparkOperator.sparkServiceAccount,
-      bucket: dataLake.bucket
+      environment: {
+        S3_BUCKET: dataLake.bucket.bucketName
+      }
     });
     sparkPi.node.addDependency(sparkOperator);
   }

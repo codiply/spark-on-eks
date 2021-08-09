@@ -1,7 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as eks from '@aws-cdk/aws-eks';
-import * as s3 from '@aws-cdk/aws-s3';
 import { DeploymentConfig } from '../config/deployment-config';
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import { SparkConfig } from '../config/sections/spark';
@@ -12,7 +11,7 @@ export interface PySparkJobProps {
   readonly jobName: string;
   readonly cluster: eks.Cluster;
   readonly serviceAccount: eks.ServiceAccount;
-  readonly bucket: s3.Bucket;
+  readonly environment?: { [key: string]: string };
 }
   
 export class PySparkJob extends cdk.Construct {
@@ -30,6 +29,15 @@ export class PySparkJob extends cdk.Construct {
       }
     });
 
+    // let specEnvironment = props.environment ? 
+    //   Object.entries(props.environment).map(([key, value]) =>{
+    //     return {
+    //       name: key,
+    //       value: value
+    //     }
+    //   }) :
+    //   [];
+
     props.cluster.addManifest(`spark-job-${props.jobName}`, {
       apiVersion: 'sparkoperator.k8s.io/v1beta2',
       kind: 'SparkApplication',
@@ -45,12 +53,7 @@ export class PySparkJob extends cdk.Construct {
         image: image.imageUri,
         mainApplicationFile: 'local:///opt/spark-job/application.py',
         driver: {
-          env: [
-            {
-              name: "S3_BUCKET",
-              value: props.bucket.bucketName
-            }
-          ],
+          envVars: props.environment ?? {},
           cores: 1,
           coreLimit: "1200m",
           memory: "512m",
@@ -60,6 +63,7 @@ export class PySparkJob extends cdk.Construct {
           serviceAccount: props.serviceAccount.serviceAccountName
         },
         executor: {
+          envVars: props.environment ?? {},
           cores: 1,
           instances: 1,
           memory: "512m",

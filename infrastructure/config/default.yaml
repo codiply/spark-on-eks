@@ -2,6 +2,8 @@ Eks:
   SparkOperatorVersion: 1.1.6
 Spark:
   Version: 3.1.1
+  HadoopVersion: 3.2.0
+  AwsSdkVersion: 1.11.874
 Vpc:
   CidrRange: '10.36.0.0/16'
   MaxAZs: 2

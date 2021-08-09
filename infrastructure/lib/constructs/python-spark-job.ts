@@ -4,12 +4,13 @@ import * as eks from '@aws-cdk/aws-eks';
 import * as s3 from '@aws-cdk/aws-s3';
 import { DeploymentConfig } from '../config/deployment-config';
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
+import { SparkConfig } from '../config/sections/spark';
 
 export interface PySparkJobProps {
   readonly deployment: DeploymentConfig;
+  readonly sparkConfig: SparkConfig;
   readonly jobName: string;
   readonly cluster: eks.Cluster;
-  readonly sparkVersion: string;
   readonly serviceAccount: eks.ServiceAccount;
   readonly bucket: s3.Bucket;
 }
@@ -23,7 +24,9 @@ export class PySparkJob extends cdk.Construct {
     const image = new DockerImageAsset(this, `docker-image-asset-${props.jobName}`, {
       directory: `./assets/docker-images/${props.jobName}`,
       buildArgs: {
-        SPARK_VERSION: props.sparkVersion
+        AWS_SDK_VERSION: props.sparkConfig.AwsSdkVersion,
+        HADOOP_VERSION: props.sparkConfig.HadoopVersion,
+        SPARK_VERSION: props.sparkConfig.Version
       }
     });
 
@@ -35,7 +38,7 @@ export class PySparkJob extends cdk.Construct {
         namespace: 'default'
       },
       spec: {
-        sparkVersion: props.sparkVersion,
+        sparkVersion: props.sparkConfig.Version,
         type: 'Python',
         pythonVersion: '3',
         mode: 'cluster',
@@ -52,7 +55,7 @@ export class PySparkJob extends cdk.Construct {
           coreLimit: "1200m",
           memory: "512m",
           labels: {
-            version: props.sparkVersion
+            version: props.sparkConfig.Version
           },
           serviceAccount: props.serviceAccount.serviceAccountName
         },
@@ -61,7 +64,7 @@ export class PySparkJob extends cdk.Construct {
           instances: 1,
           memory: "512m",
           labels: {
-            version: props.sparkVersion
+            version: props.sparkConfig.Version
           }
         }
       }

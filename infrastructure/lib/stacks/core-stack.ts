@@ -7,12 +7,12 @@ import { PySparkJob } from '../constructs/python-spark-job';
 import { SparkOperator } from '../constructs/spark-operator';
 import { DataLake } from '../constructs/data-lake';
 
-export interface MainStackProps extends cdk.StackProps {
+export interface CoreStackProps extends cdk.StackProps {
   readonly config: Config;
 }
 
-export class MainStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props: MainStackProps) {
+export class CoreStack extends cdk.Stack {
+  constructor(scope: cdk.App, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
     const networking = new Networking(this, 'networking', {
@@ -48,9 +48,19 @@ export class MainStack extends cdk.Stack {
 
     const sparkPi = new PySparkJob(this, 'ecr-image-python-spark-pi', {
       deployment: props.config.Deployment,
+      sparkConfig: props.config.Spark,
       jobName: 'python-spark-pi',
       cluster: eksCluster.cluster,
-      sparkVersion: props.config.Spark.Version,
+      serviceAccount: sparkOperator.sparkServiceAccount,
+      bucket: dataLake.bucket
+    });
+    sparkPi.node.addDependency(sparkOperator);
+
+    const weatherDataJob = new PySparkJob(this, 'ecr-image-weather-data', {
+      deployment: props.config.Deployment,
+      sparkConfig: props.config.Spark,
+      jobName: 'weather-data',
+      cluster: eksCluster.cluster,
       serviceAccount: sparkOperator.sparkServiceAccount,
       bucket: dataLake.bucket
     });

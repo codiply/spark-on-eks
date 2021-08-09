@@ -28,7 +28,9 @@ export class SparkOperator extends cdk.Construct {
       repository: 'https://googlecloudplatform.github.io/spark-on-k8s-operator',
       version: props.version,
       namespace: sparkOperatorNamespace,
-      createNamespace: true
+      createNamespace: true,
+      wait: true,
+      timeout: cdk.Duration.minutes(15)
     });
 
     const sparkOperatorDeploymentPatch = new eks.KubernetesPatch(this, 'spark-operator-patch', {

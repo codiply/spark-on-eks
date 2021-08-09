@@ -65,6 +65,6 @@ export class CoreStack extends cdk.Stack {
         S3_BUCKET: dataLake.bucket.bucketName
       }
     });
-    sparkPi.node.addDependency(sparkOperator);
+    weatherDataJob.node.addDependency(sparkOperator);
   }
 }

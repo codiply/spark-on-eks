@@ -46,25 +46,29 @@ export class CoreStack extends cdk.Stack {
       ]
     }));
 
-    const sparkPi = new PySparkJob(this, 'ecr-image-python-spark-pi', {
-      deployment: props.config.Deployment,
-      sparkConfig: props.config.Spark,
-      jobName: 'python-spark-pi',
-      cluster: eksCluster.cluster,
-      serviceAccount: sparkOperator.sparkServiceAccount
-    });
-    sparkPi.node.addDependency(sparkOperator);
+    if (props.config.DeployJobs.SparkPi) {
+      const sparkPi = new PySparkJob(this, 'ecr-image-python-spark-pi', {
+        deployment: props.config.Deployment,
+        sparkConfig: props.config.Spark,
+        jobName: 'python-spark-pi',
+        cluster: eksCluster.cluster,
+        serviceAccount: sparkOperator.sparkServiceAccount
+      });
+      sparkPi.node.addDependency(sparkOperator);
+    }
 
-    const weatherDataJob = new PySparkJob(this, 'ecr-image-weather-data', {
-      deployment: props.config.Deployment,
-      sparkConfig: props.config.Spark,
-      jobName: 'weather-data',
-      cluster: eksCluster.cluster,
-      serviceAccount: sparkOperator.sparkServiceAccount,
-      environment: {
-        S3_BUCKET: dataLake.bucket.bucketName
-      }
-    });
-    weatherDataJob.node.addDependency(sparkOperator);
+    if (props.config.DeployJobs.WeatherData) {
+      const weatherDataJob = new PySparkJob(this, 'ecr-image-weather-data', {
+        deployment: props.config.Deployment,
+        sparkConfig: props.config.Spark,
+        jobName: 'weather-data',
+        cluster: eksCluster.cluster,
+        serviceAccount: sparkOperator.sparkServiceAccount,
+        environment: {
+          S3_BUCKET: dataLake.bucket.bucketName
+        }
+      });
+      weatherDataJob.node.addDependency(sparkOperator);
+    }
   }
 }

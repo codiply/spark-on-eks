@@ -5,8 +5,6 @@ export interface SparkConfig
     readonly AwsSdkVersion: string;
     readonly HadoopVersion: string;
     readonly Version: string;
-    
-    
 }
 
 export function getConfig(object: { [name: string]: any }): SparkConfig

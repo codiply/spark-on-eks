@@ -6,23 +6,17 @@ from pyspark.sql.types import StructType, StructField, StringType, IntegerType, 
 
 bucket = os.environ['S3_BUCKET']
 
-if __name__ == "__main__":
-    session = boto3.Session()
-    credentials = session.get_credentials().get_frozen_credentials()
-    access_key = credentials.access_key
-    secret_key = credentials.secret_key
-    
+caller_identity = boto3.client('sts').get_caller_identity()
+print("Caller identity:")
+print(caller_identity)
+print("")
+
+if __name__ == "__main__":    
     spark = SparkSession\
           .builder\
-          .appName("ReadFromS3")\
-          .master('local[*]')\
-          .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")\
-          .config("spark.hadoop.fs.AbstractFileSystem.s3a.impl", "org.apache.hadoop.fs.s3a.S3A")\
-          .config("spark.hadoop.fs.s3a.access.key", access_key)\
-          .config("spark.hadoop.fs.s3a.secret.key", secret_key)\
-          .config("spark.hadoop.fs.s3a.multiobjectdelete.enable", "false") \
-          .config("spark.hadoop.fs.s3a.fast.upload","true") \
+          .appName("WeatherData")\
           .getOrCreate()
+          
 
     schema = StructType([
         StructField("station_id", StringType(), False),

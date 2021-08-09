@@ -2,7 +2,7 @@ import os
 import boto3
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, avg, to_timestamp, year
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
+from pyspark.sql.types import StructType, StructField, StringType, FloatType
 
 bucket = os.environ['S3_BUCKET']
 
@@ -11,13 +11,17 @@ print("Caller identity:")
 print(caller_identity)
 print("")
 
-if __name__ == "__main__":    
+if __name__ == "__main__":  
+    session = boto3.Session()
+    credentials = session.get_credentials().get_frozen_credentials()
+
     spark = SparkSession\
           .builder\
           .appName("WeatherData")\
+          .config("spark.hadoop.fs.s3a.access.key", credentials.access_key)\
+          .config("spark.hadoop.fs.s3a.secret.key", credentials.secret_key)\
           .getOrCreate()
           
-
     schema = StructType([
         StructField("station_id", StringType(), False),
         StructField("date", StringType(), False),

@@ -54,8 +54,7 @@ export class PySparkJob extends cdk.Construct {
         mainApplicationFile: 'local:///opt/spark-job/application.py',
         sparkConf: { },
         hadoopConf: {
-          'fs.s3a.impl': 'org.apache.hadoop.fs.s3a.S3AFileSystem',
-          'fs.s3a.aws.credentials.provider': 'com.amazonaws.auth.InstanceProfileCredentialsProvider'
+          'fs.s3a.impl': 'org.apache.hadoop.fs.s3a.S3AFileSystem'
         },
         driver: {
           envVars: props.environment ?? {},

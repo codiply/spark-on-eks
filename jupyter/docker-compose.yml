@@ -5,8 +5,8 @@ services:
     build: ./docker/
     restart: always
     volumes:
-      - ./notebooks/:/home/jovyan/work
-      # - ~/.aws/:/home/jovyan/.aws/
+      - ./work/:/home/jovyan/work/
+      - ~/.aws/:/home/jovyan/.aws/:ro
     ports:
       - 8888:8888
     environment:

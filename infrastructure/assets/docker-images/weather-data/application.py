@@ -1,20 +1,12 @@
 import os
-import boto3
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, avg, to_timestamp, year
 from pyspark.sql.types import StructType, StructField, StringType, FloatType
 
 bucket = os.environ['S3_BUCKET']
 
-caller_identity = boto3.client('sts').get_caller_identity()
-print("Caller identity:")
-print(caller_identity)
-print("")
 
 if __name__ == "__main__":  
-    session = boto3.Session()
-    credentials = session.get_credentials().get_frozen_credentials()
-
     spark = SparkSession\
           .builder\
           .appName("WeatherData")\

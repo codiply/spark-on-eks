@@ -60,4 +60,4 @@ At the moment, I cannot deploy everything in one go (using dependencies is not e
 ## Versions
 
 - Your Hadoop version will determine what version of [hadoop-aws](https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws) you will use
-- This in turn will determine what version of [aws-java-sdk-bundle] you need to use
+- This in turn will determine what version of [aws-java-sdk-bundle](https://mvnrepository.com/artifact/org.apache.hadoop/aws-java-sdk-bundle) you need to use

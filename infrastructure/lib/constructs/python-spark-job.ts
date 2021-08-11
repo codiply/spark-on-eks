@@ -51,6 +51,7 @@ export class PySparkJob extends cdk.Construct {
         pythonVersion: '3',
         mode: 'cluster',
         image: image.imageUri,
+        imagePullPolicy: 'Always',
         mainApplicationFile: 'local:///opt/spark-job/application.py',
         sparkConf: { },
         hadoopConf: {

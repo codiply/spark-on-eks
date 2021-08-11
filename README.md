@@ -8,11 +8,15 @@
 
 ## Deploy
 
-You can deploy from the `infrastructure/` directory with
+The `infrastructure/` directory contains an [AWS CDK project](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html) written [in TypeScript](https://docs.aws.amazon.com/de_de/cdk/latest/guide/work-with-cdk-typescript.html).
+
+From the `infrastructure/` directory run
 
 ```
 ./cdk.sh deploy
 ```
 
-1. Deploy first with all the switches in `DeployJobs` in `infrastructure/config/default.yaml` set to `'false'` (at the moment I cannot deploy everything in one go; the dependencies are not enough)
+At the moment, I cannot deploy everything in one go (using dependencies is not enough), so it needs to be done in two steps:
+
+1. Deploy first with all the switches in `DeployJobs` in `infrastructure/config/default.yaml` set to `'false'`
 2. Then deploy a second time with the job you wish to deploy switched on

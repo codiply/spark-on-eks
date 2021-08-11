@@ -18,8 +18,6 @@ if __name__ == "__main__":
     spark = SparkSession\
           .builder\
           .appName("WeatherData")\
-          .config("spark.hadoop.fs.s3a.access.key", credentials.access_key)\
-          .config("spark.hadoop.fs.s3a.secret.key", credentials.secret_key)\
           .getOrCreate()
           
     schema = StructType([

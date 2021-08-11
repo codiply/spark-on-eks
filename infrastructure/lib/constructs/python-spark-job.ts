@@ -23,7 +23,7 @@ export class PySparkJob extends cdk.Construct {
     const image = new DockerImageAsset(this, `docker-image-asset-${props.jobName}`, {
       directory: `./assets/docker-images/${props.jobName}`,
       buildArgs: {
-        AWS_SDK_VERSION: props.sparkConfig.AwsSdkVersion,
+        AWS_SDK_BUNDLE_VERSION: props.sparkConfig.AwsSdkBundleVersion,
         HADOOP_VERSION: props.sparkConfig.HadoopVersion,
         SPARK_VERSION: props.sparkConfig.Version
       }
@@ -54,7 +54,8 @@ export class PySparkJob extends cdk.Construct {
         mainApplicationFile: 'local:///opt/spark-job/application.py',
         sparkConf: { },
         hadoopConf: {
-          'fs.s3a.impl': 'org.apache.hadoop.fs.s3a.S3AFileSystem'
+          'fs.s3a.impl': 'org.apache.hadoop.fs.s3a.S3AFileSystem',
+          'fs.s3a.aws.credentials.provider': 'com.amazonaws.auth.WebIdentityTokenCredentialsProvider'
         },
         driver: {
           envVars: props.environment ?? {},
@@ -69,7 +70,7 @@ export class PySparkJob extends cdk.Construct {
         executor: {
           envVars: props.environment ?? {},
           cores: 1,
-          instances: 1,
+          instances: 2,
           memory: "512m",
           labels: {
             version: props.sparkConfig.Version

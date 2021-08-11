@@ -2,7 +2,7 @@ import { getString } from "../utils";
 
 export interface SparkConfig
 {
-    readonly AwsSdkVersion: string;
+    readonly AwsSdkBundleVersion: string;
     readonly HadoopVersion: string;
     readonly Version: string;
 }
@@ -10,7 +10,7 @@ export interface SparkConfig
 export function getConfig(object: { [name: string]: any }): SparkConfig
 {
     return {
-        AwsSdkVersion: getString(object, 'AwsSdkVersion'),
+        AwsSdkBundleVersion: getString(object, 'AwsSdkBundleVersion'),
         HadoopVersion: getString(object, 'HadoopVersion'),
         Version: getString(object, 'Version')
     };

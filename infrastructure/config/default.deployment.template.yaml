@@ -4,4 +4,5 @@ Prefix: 'spark-eks'
 AdminUserArns:
   - '<ARN of IAM users to be set as administrators>'
 AllowedIpRanges: 
-  - '<CIDR ranges of allowed public IP addresses>'
+  - '<CIDR range of allowed public IP addresses>' # AUTO_FILL_MY_IP_ADDRESS
+  - '<CIDR range of allowed public IP addresses>'
